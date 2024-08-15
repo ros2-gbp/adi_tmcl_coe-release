@@ -1,0 +1,6 @@
+uint8 slave_number
+string cmd
+int32 value
+---
+int32 actual_value
+bool result
