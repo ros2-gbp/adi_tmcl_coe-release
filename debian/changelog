@@ -1,0 +1,8 @@
+ros-noetic-adi-tmc-coe (1.0.0-1focal) focal; urgency=high
+
+  * Adding v1.0.0 of adi_tmc_coe, ROS1, Noetic
+  * Contributors: Cacar
+
+ -- ROS@analog.com <ROS@analog.com>  Wed, 17 Jul 2024 16:00:00 -0000
+
+
