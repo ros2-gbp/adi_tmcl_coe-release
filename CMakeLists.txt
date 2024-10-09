@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(adi_tmc_coe)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   roscpp_serialization
+  soem
 )
 
 #################################
@@ -26,51 +27,6 @@ MESSAGE(STATUS "TMC_COE_ROS_DEBUG is enabled")
 ELSE()
 MESSAGE(STATUS "TMC_COE_ROS_DEBUG is disabled")
 ENDIF(TMC_COE_ROS_DEBUG)
-
-###################################
-## External Project Dependencies ##
-###################################
-
-message(STATUS " CMAKE_CURRENT_SOURCE_DIR is: " ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS " CMAKE_BINARY_DIR is: " ${CMAKE_BINARY_DIR})
-message(STATUS " CMAKE_INSTALL_PREFIX is: " ${CMAKE_INSTALL_PREFIX})
-
-include(ExternalProject)
-ExternalProject_Add(SOEM
-   PREFIX              ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/SOEM
-   CONFIGURE_COMMAND   bash -c "mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/SOEM"
-   GIT_REPOSITORY      https://github.com/OpenEtherCATsociety/SOEM.git
-   GIT_TAG             v1.4.0
-   BUILD_COMMAND       cmake -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_POSITION_INDEPENDENT_CODE=ON <SOURCE_DIR>
-   INSTALL_COMMAND     make install
-   TEST_COMMAND        echo ">>> SOEM: " COMMAND echo <SOURCE_DIR> COMMAND echo <BINARY_DIR>
-   LOG_DOWNLOAD        1
-   LOG_BUILD           1
-   LOG_INSTALL         1 
- )
-
- ExternalProject_Get_Property(SOEM SOURCE_DIR)
- message(STATUS " SOEM's source_dir is: " ${SOURCE_DIR})
-
- ExternalProject_Get_Property(SOEM BINARY_DIR)
- message(STATUS " SOEM's binary_dir is: " ${BINARY_DIR})
-
- ExternalProject_Get_Property(SOEM INSTALL_DIR)
- message(STATUS " SOEM's install_dir is: " ${INSTALL_DIR})
-
-# add dependencies on SOEM
-set (SOEM_INCLUDE ${INSTALL_DIR}/include/soem)
-set (SOEM_BUILD ${INSTALL_DIR}/lib/libsoem.a)
-
-add_library(soem_target SHARED IMPORTED)
-set_target_properties(soem_target PROPERTIES IMPORTED_LOCATION ${SOEM_BUILD})
-add_dependencies(soem_target SOEM)
-
-# find pthread to export dependency via catkin_package
-find_package(Threads)
-if(CMAKE_THREAD_LIBS_INIT)
-  set (P_THREAD_LIB ${CMAKE_THREAD_LIBS_INIT})
-endif()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -109,7 +65,6 @@ catkin_package(
     tmc_coe_bldc_motor
     tmc_coe_stepper_motor
     tmc_coe_ros
-    soem_target
   CATKIN_DEPENDS 
     roscpp 
     std_msgs
@@ -132,15 +87,14 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_NEWDTAGS_LINK_FLAGS}
 include_directories(
   include/${PROJECT_NAME}
   ${catkin_INCLUDE_DIRS}
-  ${SOEM_INCLUDE}
+  ${soem_INCLUDE_DIRS}
 )
 
 ## Declare a C++ Libraries
 
 ### tmc_coe_interpreter Library
 add_library(tmc_coe_interpreter src/tmc_coe_interpreter.cpp)
-add_dependencies(tmc_coe_interpreter soem_target)
-target_link_libraries(tmc_coe_interpreter ${SOEM_BUILD} ${P_THREAD_LIB})
+target_link_libraries(tmc_coe_interpreter ${soem_LIBRARIES})
 
 ### tmc_coe_motor Library
 add_library(tmc_coe_motor src/tmc_coe_motor.cpp)
