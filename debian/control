@@ -1,0 +1,12 @@
+Source: ros-noetic-adi-tmc-coe
+Section: misc
+Priority: optional
+Maintainer: Analog Devices <ROS@analog.com>
+Build-Depends: debhelper (>= 9.0.0), ros-noetic-catkin, ros-noetic-geometry-msgs, ros-noetic-message-generation, ros-noetic-roscpp, ros-noetic-roscpp-serialization, ros-noetic-soem, ros-noetic-std-msgs
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-noetic-adi-tmc-coe
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-noetic-ethercat-grant, ros-noetic-geometry-msgs, ros-noetic-message-runtime, ros-noetic-roscpp, ros-noetic-roscpp-serialization, ros-noetic-soem, ros-noetic-std-msgs
+Description: The adi_tmc_coe package
