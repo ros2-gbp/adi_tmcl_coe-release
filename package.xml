@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>adi_tmc_coe</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>The adi_tmc_coe package</description>
   
-  <maintainer email="ROS@analog.com">ROS@analog.com</maintainer>
+  <maintainer email="ROS@analog.com">Analog Devices</maintainer>
   
   <license>BSD-3 Clause</license>
 
