@@ -77,6 +77,7 @@ catkin_package(
 # in addition to not propagating ros_ethercat_loop RUNPATH to dependencies, in contrast to RPATH
 SET(GCC_NEWDTAGS_LINK_FLAGS "-Wl,--disable-new-dtags")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_NEWDTAGS_LINK_FLAGS}")
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 ###########
 ## Build ##
